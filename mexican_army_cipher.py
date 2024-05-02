@@ -25,27 +25,30 @@ class MexicanArmyCipher:
         return rings
 
     def encrypt(self, plaintext):
-        encrypted_text = ""
+        encrypted_text = []
         for char in plaintext:
             if char.isalpha():
                 encoded_char = random.choice(self.rings)[self.rotated_alphabets.index(char.lower())]
                 if encoded_char > 100 :
                     encoded_char = random.choice(self.rings[:-1])[self.rotated_alphabets.index(char.lower())]
                 if self.encode_to_text :
-                    encoded_char = self.alphabets[encoded_char - 1 % 26]
+                    encoded_char = self.alphabets[(encoded_char % 26) - 1]
                 else:
-                    encoded_char = str(encoded_char) + '-'
-                encrypted_text += encoded_char
+                    encoded_char = str(encoded_char)
+                encrypted_text.append(encoded_char)
             else:
-                encrypted_text += char
-        return encrypted_text
+                encrypted_text.append(char)
+        return "-".join(encrypted_text)
 
     def decrypt(self, ciphertext):
         decrypted_text = ""
         cipher_list = list(ciphertext.split('-'))
         for char in cipher_list:
-            if char.isnumeric():
-                pass
+            if char.strip().isnumeric():
+                encoded_char = int(char)
+                ring_number = int(encoded_char / 26)
+                ring = self.rings[ring_number]
+                decrypted_text += self.rotated_alphabets[ring.index((encoded_char))]
             else:
                 decrypted_text += char
         return decrypted_text
@@ -63,7 +66,7 @@ class MexicanArmyCipher:
 
 
 # Example usage:
-cipher = MexicanArmyCipher('m', [10, 28, 74, 95], False)
+cipher = MexicanArmyCipher('M', [10, 28, 74, 95], True)
 
 plaintext = "Network Security"
 encrypted_text = cipher.encrypt(plaintext)
@@ -72,5 +75,3 @@ print("Encrypted:", encrypted_text)
 decrypted_text = cipher.decrypt(encrypted_text)
 print("Decrypted:", decrypted_text)
 
-decrypted_text = cipher.decrypt(encrypted_text)
-print("Decrypted:", decrypted_text)
