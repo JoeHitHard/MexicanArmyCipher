@@ -29,10 +29,10 @@ class MexicanArmyCipher:
         for char in plaintext:
             if char.isalpha():
                 encoded_char = random.choice(self.rings)[self.rotated_alphabets.index(char.lower())]
-                if encoded_char > 100 :
+                if encoded_char > 100:
                     encoded_char = random.choice(self.rings[:-1])[self.rotated_alphabets.index(char.lower())]
-                if self.encode_to_text :
-                    encoded_char = self.alphabets[(encoded_char % 26) - 1]
+                if self.encode_to_text:
+                    encoded_char = str(int(encoded_char / 26)) + self.alphabets[(encoded_char % 26) - 1]
                 else:
                     encoded_char = str(encoded_char)
                 encrypted_text.append(encoded_char)
@@ -44,25 +44,18 @@ class MexicanArmyCipher:
         decrypted_text = ""
         cipher_list = list(ciphertext.split('-'))
         for char in cipher_list:
-            if char.strip().isnumeric():
-                encoded_char = int(char)
-                ring_number = int(encoded_char / 26)
+            if char.isalnum():
+                if self.encode_to_text:
+                    ring_number = int(char[0])
+                    encoded_char = (len(self.alphabets) * ring_number) + self.alphabets.index(char[1:]) + 1
+                else:
+                    encoded_char = int(char)
+                    ring_number = int(encoded_char / 26)
                 ring = self.rings[ring_number]
                 decrypted_text += self.rotated_alphabets[ring.index((encoded_char))]
             else:
                 decrypted_text += char
         return decrypted_text
-
-    def shift_char(self, char, offset):
-        if char.islower():
-            base = ord('a')
-        elif char.isupper():
-            base = ord('A')
-        else:
-            return char
-
-        shifted = (ord(char) - base + offset) % 26 + base
-        return chr(shifted)
 
 
 # Example usage:
@@ -74,4 +67,3 @@ print("Encrypted:", encrypted_text)
 
 decrypted_text = cipher.decrypt(encrypted_text)
 print("Decrypted:", decrypted_text)
-
