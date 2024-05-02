@@ -58,10 +58,22 @@ class MexicanArmyCipher:
         return decrypted_text
 
 
-# Example usage:
+# Example usage: with encode to text false
+cipher = MexicanArmyCipher('M', [10, 28, 74, 95], False)
+
+plaintext = "Network Security"
+print("Normal Text:", plaintext, "\nWith encode to text false")
+encrypted_text = cipher.encrypt(plaintext)
+print("Encrypted:", encrypted_text)
+
+decrypted_text = cipher.decrypt(encrypted_text)
+print("Decrypted:", decrypted_text)
+
+# Example usage: with encode to text true
 cipher = MexicanArmyCipher('M', [10, 28, 74, 95], True)
 
 plaintext = "Network Security"
+print("Normal Text:", plaintext, "\nWith encode to text true")
 encrypted_text = cipher.encrypt(plaintext)
 print("Encrypted:", encrypted_text)
 
